@@ -56,18 +56,24 @@
 
 // app.listen(3000);
 const express = require('express');
+
 const http = require('http');
 const cors = require('cors');
+const { Sequelize } = require('sequelize');
 const { timeStamp } = require('console');
-const bodyParser = require('body-parser');
-;
+
+const sequelize = new Sequelize("postgres://postgres:246509@127.0.0.1:5432/ToDo");
+
+const LocalStorage = require("node-localstorage").LocalStorage;
+
+ls = new LocalStorage("./scratch")
 
 const app = express();
 
 app.use(cors());
 app.use(express.urlencoded({ extended: true }));
-app.use(bodyParser.json())
-// app.use(express.json());
+// app.use(bodyParser.json())
+app.use(express.json());
 
 app.use((req, res, next) => {
   // console.log('URL = ', req.url);
@@ -75,11 +81,21 @@ app.use((req, res, next) => {
   // console.log('METHOD = ', req.method);
   // console.log('HOST = ', req.headers.host);
   // console.log('IsSecure = ', req.secure);
-  console.log('BODY', req.body);
-  console.log('QUERY', req.query);
-
+  // console.log('BODY', req.body);
+  // console.log('QUERY', req.query);
   next();
 });
+
+async function bebra(){
+  try {
+    await sequelize.authenticate();
+    console.log('Connection has been established successfully.');
+  } catch (error) {
+    console.error('Unable to connect to the database:', error);
+  }
+}
+
+bebra()
 
 app.get("/sum", (req, res) =>{
   console.log(req.params.body.a);
@@ -88,6 +104,40 @@ app.get("/sum", (req, res) =>{
     summ
     });
   });
+
+
+
+  let storage = [];
+
+
+  app.post("/strings", (req, res) => {
+    let info = req.body;
+
+    for (i in info) storage.push(info[i]);
+
+    ls.setItem("params", storage);
+
+    res.status(200).json("Done!");
+  });
+
+  app.get("/strings", (req, res) => {
+    let params = ls.getItem("params").split(","); 
+    res.status(200).json({params});
+  });
+
+  // app.delete("/string", (req, res) => {
+    
+  //   res.status(200).json("Done");
+  // });
+
+  app.delete("/strings", (req, res) =>{
+    if (!req.query.index) storage.splice(req.query.index, 1);
+    else storage = []; 
+    res.status(200).json("Done");
+  });
+
+
+
 
 app.post("/withoutJSONExpress", (req, res) =>{
   console.log(req.body.a);
