@@ -1,9 +1,9 @@
 const Sequelize = require("sequelize");
 const { sequelize } = require('..');
 
-class Todo extends Sequelize.Model {}
+class ToDo extends Sequelize.Model {}
 
-Todo.init(
+ToDo.init(
     {
         id: {
             type: Sequelize.DataTypes.UUID,
@@ -26,4 +26,4 @@ Todo.init(
     { sequelize: sequelize, underscored: true, modelName: 'todo' }
 );
 
-module.exports = Todo
+module.exports = ToDo
