@@ -55,7 +55,7 @@ async function deleteToDos(req, res, next){
     await ToDo.destroy({
         truncate: true
     });
-    res.status(200)
+    res.status(200).json({message: "Ok"})
 }
 
 async function updateToDoById(req, res, next){
