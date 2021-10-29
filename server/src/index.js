@@ -59,7 +59,7 @@ const express = require('express');
 
 const http = require('http');
 const cors = require('cors');
-const apiRouter = require('./controllers/api.controller');
+const apiToDosRouter = require('./controllers/api-todos.controller');
 const { notFound, errorHandler, asyncHandler } = require('./middlewares/middlewares');
 const { initDB } = require('./dataBase');
 
@@ -69,6 +69,8 @@ const LocalStorage = require("node-localstorage").LocalStorage;
 ls = new LocalStorage("./scratch")
 
 const app = express();
+
+initDB()
 
 app.use(cors());
 app.use(express.urlencoded({ extended: true }));
@@ -86,7 +88,7 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use('/api/todos', apiRouter);
+app.use('/api/todos', apiToDosRouter);
 
 http.createServer(app).listen(3000, () => {
   console.log('Server is working on port 3000');
