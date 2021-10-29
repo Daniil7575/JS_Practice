@@ -30,6 +30,11 @@ ToDo.init(
         isFavourite: {
             type: Sequelize.BOOLEAN,
             defaultValue: false
+        },
+
+        prior:{
+            type: Sequelize.SMALLINT,
+            defaultValue: 1
         }
 
     },

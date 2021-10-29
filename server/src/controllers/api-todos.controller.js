@@ -1,5 +1,6 @@
 const { Router } = require('express');
 const ErrorResponse = require('../classes/error-response');
+const { initDB } = require('../dataBase');
 const ToDo = require('../dataBase/models/ToDo.model');
 const User = require('../dataBase/models/User.model');
 const { asyncHandler } = require('../middlewares/middlewares');
@@ -68,5 +69,7 @@ async function updateToDoById(req, res, next){
 
     res.status(200).json(todo);
 }
+
+initRoutes()
 
 module.exports = router;
