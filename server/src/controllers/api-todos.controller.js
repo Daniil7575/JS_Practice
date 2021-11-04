@@ -3,7 +3,7 @@ const ErrorResponse = require('../classes/error-response');
 const { initDB } = require('../dataBase');
 const ToDo = require('../dataBase/models/ToDo.model');
 const User = require('../dataBase/models/User.model');
-const { asyncHandler } = require('../middlewares/middlewares');
+const { asyncHandler, requireToken } = require('../middlewares/middlewares');
 
 
 const router = Router();
@@ -11,7 +11,7 @@ const router = Router();
 function initRoutes(){
     router.get("/", asyncHandler(getToDos));
     router.get("/:id", asyncHandler(getToDoById));
-    router.post("/", asyncHandler(createToDo));
+    router.post("/", asyncHandler(requireToken(createToDo)));
     router.delete("/", asyncHandler(deleteToDos));
     router.delete("/:id", asyncHandler(deleteToDoById));
     router.patch("/:id", asyncHandler(updateToDoById));
@@ -35,8 +35,8 @@ async function getToDoById(req, res, next) {
 }
 
 async function createToDo(req, res, next){
-    const todo = await ToDo.create(req.body);
-
+    const todo = await ToDo.create(req.body, {user_id: req.user_id});
+    
     res.status(200).json(todo);
 }
 

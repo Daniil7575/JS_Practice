@@ -61,14 +61,14 @@ const http = require('http');
 const cors = require('cors');
 const apiToDosRouter = require('./controllers/api-todos.controller');
 const apiAuthRouter = require("./controllers/api-auth.controller")
-const { notFound, errorHandler, asyncHandler } = require('./middlewares/middlewares');
+const { notFound, errorHandler, asyncHandler, requireToken } = require('./middlewares/middlewares');
 const { initDB } = require('./dataBase');
 
 
 
-const LocalStorage = require("node-localstorage").LocalStorage;
+// const LocalStorage = require("node-localstorage").LocalStorage;
 
-ls = new LocalStorage("./scratch")
+// ls = new LocalStorage("./scratch")
 
 const app = express();
 

@@ -2,7 +2,7 @@ const { Router } = require('express');
 const { Op } = require('sequelize');
 const ErrorResponse = require('../classes/error-response');
 const User = require('../dataBase/models/User.model');
-const { asyncHandler } = require('../middlewares/middlewares');
+const { asyncHandler, requireToken } = require('../middlewares/middlewares');
 const { nanoid } = require('nanoid')
 const Token = require('../dataBase/models/Token.model');
 
@@ -27,7 +27,7 @@ async function loginUser(req, res, next) {
 
     const token = await Token.create({ user_id: enteredUser.id, value: nanoid(128) })
     let b = enteredUser.id
-    res.status(200).json({b})
+    res.status(200).json(req.body)
 }
 
 async function regUser(req, res, next) {

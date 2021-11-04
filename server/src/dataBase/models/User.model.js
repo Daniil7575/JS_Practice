@@ -39,7 +39,7 @@ User.init(
     { sequelize: sequelize, underscored: true, modelName: 'user', timestamps: false }
 );
 
-ToDo.belongsTo(User);
+ToDo.belongsTo(User, {foreignKey: "user_id"});
 Token.belongsTo(User, {foreignKey: "user_id"});
 
 User.hasMany(ToDo);
