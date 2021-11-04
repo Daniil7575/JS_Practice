@@ -16,6 +16,7 @@ const notFound = (req, _res, next) => {
     next(new ErrorResponse(`Not found - ${req.originalUrl}`, 404));
 };
 
+
 const errorHandler = (err, _req, res, _next) => {
     console.log('Ошибка', {
         message: err.message,

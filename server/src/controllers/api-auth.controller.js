@@ -3,6 +3,8 @@ const { Op } = require('sequelize');
 const ErrorResponse = require('../classes/error-response');
 const User = require('../dataBase/models/User.model');
 const { asyncHandler } = require('../middlewares/middlewares');
+const { nanoid } = require('nanoid')
+const Token = require('../dataBase/models/Token.model');
 
 const router = Router();
 
@@ -23,7 +25,9 @@ async function loginUser(req, res, next) {
         throw new ErrorResponse("Incorrect login or password", 404);
     }
 
-    res.status(200).json(enteredUser);
+    const token = await Token.create({ user_id: enteredUser.id, value: nanoid(128) })
+    let b = enteredUser.id
+    res.status(200).json({b})
 }
 
 async function regUser(req, res, next) {

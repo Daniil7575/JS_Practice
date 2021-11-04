@@ -20,7 +20,8 @@ function initRoutes(){
 async function getToDos(req, res, next) {
     const todos = await ToDo.findAll();
     const user = await User.findAll();
-    res.status(200).json({ todos });
+
+    res.status(200).json(todos);
 }
 
 async function getToDoById(req, res, next) {

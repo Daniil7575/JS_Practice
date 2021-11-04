@@ -40,7 +40,7 @@ User.init(
 );
 
 ToDo.belongsTo(User);
-Token.belongsTo(User);
+Token.belongsTo(User, {foreignKey: "user_id"});
 
 User.hasMany(ToDo);
 User.hasMany(Token);

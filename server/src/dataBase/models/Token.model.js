@@ -12,7 +12,7 @@ Token.init(
             defaultValue: Sequelize.DataTypes.UUIDV4
         },
        value: {
-           type: Sequelize.DataTypes.STRING(192, true)
+           type: Sequelize.DataTypes.STRING()
        }
     },
     { sequelize: sequelize, underscored: true, modelName: 'token', timestamps: false }
