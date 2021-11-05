@@ -8,62 +8,92 @@ const { asyncHandler, requireToken } = require('../middlewares/middlewares');
 
 const router = Router();
 
-function initRoutes(){
-    router.get("/", asyncHandler(getToDos));
-    router.get("/:id", asyncHandler(getToDoById));
-    router.post("/", asyncHandler(requireToken(createToDo)));
-    router.delete("/", asyncHandler(deleteToDos));
-    router.delete("/:id", asyncHandler(deleteToDoById));
-    router.patch("/:id", asyncHandler(updateToDoById));
+function initRoutes() {
+    router.get('/', asyncHandler(requireToken), asyncHandler(getToDos));
+    router.get('/:id', asyncHandler(requireToken), asyncHandler(getToDoById));
+    router.post('/', asyncHandler(requireToken), asyncHandler(createToDo));
+    router.delete('/', asyncHandler(requireToken), asyncHandler(deleteToDos));
+    router.delete('/:id', asyncHandler(requireToken), asyncHandler(deleteToDoById));
+    router.patch('/:id', asyncHandler(requireToken), asyncHandler(updateToDoById))
 }
 
 async function getToDos(req, res, next) {
-    const todos = await ToDo.findAll();
-    const user = await User.findAll();
+    const todos = await ToDo.findAll({
+        where:
+        {
+            userId: req.fToken.userId
+        }
+    });
 
-    res.status(200).json(todos);
+    res.status(200).json({ todos });
 }
 
 async function getToDoById(req, res, next) {
-    const todo = await ToDo.findByPk(req.params.id);
+    const todo = await ToDo.findOne({
+        where:
+        {
+            id: req.params.id,
+            userId: req.fToken.userId
+        }
+    });
 
     if (!todo) {
-        throw new ErrorResponse('ToDO is not found', 404);
+        throw new ErrorResponse("ToDo is not found by id", 404);
     }
 
     res.status(200).json(todo);
 }
 
-async function createToDo(req, res, next){
-    const todo = await ToDo.create(req.body, {user_id: req.user_id});
-    
+async function createToDo(req, res, next) {
+    const todo = await ToDo.create({
+        ...req.body,
+        userId: req.fToken.userId
+    });
+
     res.status(200).json(todo);
 }
 
-async function deleteToDoById(req, res, next){
-    const todo = await ToDo.findByPk(req.params.id);
+async function deleteToDoById(req, res, next) {
+    const todo = await ToDo.findOne({
+        where:
+        {
+            id: req.params.id,
+            userId: req.fToken.userId
+        }
+    });
 
-    if (!todo){
-        throw new ErrorResponse('No todo found', 404);
+    if (!todo) {
+        throw new ErrorResponse("ToDo is not found by id", 404);
     }
-    
+
     await todo.destroy();
 
     res.status(200).json(todo);
 }
 
-async function deleteToDos(req, res, next){
-    await ToDo.destroy({
+async function deleteToDos(req, res, next) {
+    let dlt = await ToDo.destroy({
+        where:
+        {
+            userId: req.fToken.userId
+        },
         truncate: true
     });
-    res.status(200).json({message: "Ok"})
+
+    res.status(200).json({ message: dlt + " ToDos have been sucessfully deleted" });
 }
 
-async function updateToDoById(req, res, next){
-    const todo = await ToDo.findByPk(req.params.id);
+async function updateToDoById(req, res, next) {
+    const todo = await ToDo.findOne({
+        where:
+        {
+            id: req.params.id,
+            userId: req.fToken.userId
+        }
+    });
 
-    if (!todo){
-        throw new ErrorResponse('Can not find todo by id', 404);
+    if (!todo) {
+        throw new ErrorResponse("ToDo is not found by id", 404);
     }
 
     await todo.update(req.body)

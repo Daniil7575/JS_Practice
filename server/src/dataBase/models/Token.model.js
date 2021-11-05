@@ -15,7 +15,7 @@ Token.init(
            type: Sequelize.DataTypes.STRING()
        }
     },
-    { sequelize: sequelize, underscored: true, modelName: 'token', timestamps: false }
+    { sequelize: sequelize, underscored: true, modelName: 'token', timestamps: true }
 );
 
 

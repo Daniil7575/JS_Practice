@@ -60,11 +60,10 @@ const express = require('express');
 const http = require('http');
 const cors = require('cors');
 const apiToDosRouter = require('./controllers/api-todos.controller');
-const apiAuthRouter = require("./controllers/api-auth.controller")
+const apiAuthRouter = require("./controllers/api-auth.controller");
+const apiUserRouter = require("./controllers/api-user.controller")
 const { notFound, errorHandler, asyncHandler, requireToken } = require('./middlewares/middlewares');
 const { initDB } = require('./dataBase');
-
-
 
 // const LocalStorage = require("node-localstorage").LocalStorage;
 
@@ -92,12 +91,11 @@ app.use((req, res, next) => {
 
 app.use('/api/todos', apiToDosRouter);
 app.use("/api/auth", apiAuthRouter);
+app.use("/api/user", apiUserRouter);
 
 http.createServer(app).listen(3000, () => {
   console.log('Server is working on port 3000');
 })
-
-
 
 // app.get("/sum", (req, res) =>{
 //   console.log(req.params.body.a);

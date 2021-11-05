@@ -13,26 +13,36 @@ const syncHandler = (fn) => (req, res, next) => {
     }
 };
 
-const requireToken = (fn) => (req, res, next) => {
-    let token = req.body.token;
-
-    if (!token) {
-        next(new ErrorResponse("Token is not found", 404))
+const requireToken = async (req, res, next) => {
+    // if token is in request body
+    const token = req.header("token");
+    if (!token)
+    {
+        throw new ErrorResponse("Token is not sent", 400)
     }
 
-    token = Token.findOne({
-        where: {
+    // if DB contains such token 
+    const fToken = await Token.findOne({
+        where:
+        {
             value: token
         }
-    });
+    })
 
-    delete req.body.token
+    if(!fToken) {
+        throw new ErrorResponse("Token is not found in DB", 404)
+    }
 
-    req.user_id= token.user_id
+    // check if token is valid (time)
+    if (parseInt(new Date(new Date().toLocaleString("en-US")) - new Date(String(fToken.createdAt))) > 300000)
+    {
+        await fToken.destroy();
+        throw new ErrorResponse("Token is expired", 401)
+    }
 
-    console.log('BODY', req.body);
-    fn(req, res, next);
-}
+    req.fToken = fToken
+    next();
+};
 
 const notFound = (req, _res, next) => {
     next(new ErrorResponse(`Not found - ${req.originalUrl}`, 404));
