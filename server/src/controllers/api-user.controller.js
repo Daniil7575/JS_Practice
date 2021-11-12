@@ -19,10 +19,6 @@ async function getUserByToken(req, res, next) {
         }
     });
 
-    if (!user){
-        throw new ErrorResponse("User is not found", 404);
-    }
-
     res.status(200).json(user)
 }
 
