@@ -1,5 +1,4 @@
 const { Router } = require('express');
-const ErrorResponse = require('../classes/error-response');
 const User = require('../dataBase/models/User.model');
 const { asyncHandler, requireToken } = require('../middlewares/middlewares');
 
@@ -19,10 +18,6 @@ async function getUserByToken(req, res, next) {
         }
     });
 
-    if (!user){
-        throw new ErrorResponse("User is not found", 404);
-    }
-
     res.status(200).json(user)
 }
 
@@ -33,10 +28,6 @@ async function updateUserInfo(req, res, next) {
             id: req.fToken.userId,
         }
     });
-
-    if (!fUser) {
-        throw new ErrorResponse("User is not found", 404);
-    }
 
     await fUser.update(req.body)
 
