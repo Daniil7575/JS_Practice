@@ -14,14 +14,12 @@ const syncHandler = (fn) => (req, res, next) => {
 };
 
 const requireToken = async (req, res, next) => {
-    // if token is in request body
     const token = req.header("token");
     if (!token)
     {
         throw new ErrorResponse("Token is not sent", 400)
     }
 
-    // if DB contains such token 
     const fToken = await Token.findOne({
         where:
         {
