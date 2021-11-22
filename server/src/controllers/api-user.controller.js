@@ -5,9 +5,9 @@ const { asyncHandler, requireToken } = require('../middlewares/middlewares');
 const router = Router();
 
 function initRoutes() {
-    router.get('/', asyncHandler(requireToken), asyncHandler(getUserByToken));
-    router.patch('/', asyncHandler(requireToken), asyncHandler(updateUserInfo));
-    router.post('/', asyncHandler(requireToken), asyncHandler(logoutUser));
+    router.get('/me', asyncHandler(requireToken), asyncHandler(getUserByToken));
+    router.patch('/me', asyncHandler(requireToken), asyncHandler(updateUserInfo));
+    router.post('/logout', asyncHandler(requireToken), asyncHandler(logoutUser));
 }
 
 async function getUserByToken(req, res, next) {
