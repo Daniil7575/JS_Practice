@@ -26,7 +26,7 @@ async function loginUser(req, res, next) {
     }
 
     const token = await Token.create({ userId: enteredUser.id, value: nanoid(128) })
-    res.status(200).json(token)
+    res.status(200).json({accessToken: token.value});
 }
 
 async function regUser(req, res, next) {
